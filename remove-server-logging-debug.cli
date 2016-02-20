@@ -1,0 +1,20 @@
+# Batch script to add and configure logging in the JBoss server
+
+# Start batching commands
+batch
+
+# Remove the logger
+/subsystem=logging/logger=com.server.rest:remove
+
+# Remove the log async handler
+#/subsystem=logging/async-handler=DEBUG_SERVER_ASYNC:remove
+
+# Remove the file handlers
+/subsystem=logging/periodic-rotating-file-handler=FILE_SERVER_DEBUG:remove
+
+# Run the batch commands
+run-batch
+
+# Reload the server configuration
+:reload
+

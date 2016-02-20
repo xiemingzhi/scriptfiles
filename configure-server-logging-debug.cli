@@ -1,0 +1,31 @@
+# Batch script to add and configure logging in the JBoss server
+
+# Start batching commands
+batch
+
+# Add the periodic rotating file handlers corresponding to those added to the logging properties file
+/subsystem=logging/periodic-rotating-file-handler=FILE_SERVER_DEBUG:add(suffix=".yyyy.MM.dd", file={"path"=>"server.debug.log", "relative-to"=>"jboss.server.log.dir"})
+
+# Configure the logging async handlers
+#/subsystem=logging/async-handler=DEBUG_SERVER_ASYNC:add(level=DEBUG,queue-length=1024,overflow-action=BLOCK,subhandlers=["FILE_SERVER_DEBUG"]) 
+
+# Create the logger for our package
+# change the level below from TRACE to DEBUG, INFO, WARN, ERROR, or FATAL, then access the application.
+/subsystem=logging/logger=com.server.rest:add(level=DEBUG)
+
+# Run the batch commands
+run-batch
+
+# Start batching commands
+batch 
+
+# Assign the handlers for our package
+#/subsystem=logging/logger=com.server.rest:assign-handler(name="DEBUG_SERVER_ASYNC") 
+/subsystem=logging/logger=com.server.rest:assign-handler(name="FILE_SERVER_DEBUG") 
+
+# Run the batch commands
+run-batch
+
+# Reload the server configuration
+:reload
+
